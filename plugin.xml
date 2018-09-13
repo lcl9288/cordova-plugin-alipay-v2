@@ -40,9 +40,6 @@
         <source-file src="src/android/alipay.java" target-dir="src/cn/hhjjj/alipay"/>
         <source-file src="src/android/PayResult.java" target-dir="src/cn/hhjjj/alipay"/>
         <source-file src="src/android/AuthResult.java" target-dir="src/cn/hhjjj/alipay"/>
-        <source-file src="src/android/OrderInfoUtil2_0.java" target-dir="src/cn/hhjjj/alipay"/>
-        <source-file src="src/android/SignUtils.java" target-dir="src/cn/hhjjj/alipay"/>
-        <source-file src="src/android/Base64.java" target-dir="src/cn/hhjjj/alipay"/>
         <lib-file src="src/android/lib/alipaySdk-20170725.jar" />
 
     </platform>
