@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 
 import java.util.Map;
+import java.util.HashMap;
 
 import android.widget.Toast;
 import android.text.TextUtils;
@@ -25,35 +26,21 @@ import android.annotation.SuppressLint;
  */
 public class alipay extends CordovaPlugin {
 
-    // private static final int SDK_PAY_FLAG = 1;
+   // private static final int SDK_PAY_FLAG = 1;
 
 
-    /**
-     * 支付宝支付业务：入参app_id
-     */
-    public static final String APPID = "";
 
-    /**
-     * 支付宝账户登录授权业务：入参pid值
-     */
-    public static final String PID = "";
-    /**
-     * 支付宝账户登录授权业务：入参target_id值
-     */
-    public static final String TARGET_ID = "qwe";
+    	/** 商户私钥，pkcs8格式 */
+    	/** 如下私钥，RSA2_PRIVATE 或者 RSA_PRIVATE 只需要填入一个 */
+    	/** 如果商户两个都设置了，优先使用 RSA2_PRIVATE */
+    	/** RSA2_PRIVATE 可以保证商户交易在更加安全的环境下进行，建议使用 RSA2_PRIVATE */
+    	/** 获取 RSA2_PRIVATE，建议使用支付宝提供的公私钥生成工具生成， */
+    	/** 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1 */
 
-    /** 商户私钥，pkcs8格式 */
-    /** 如下私钥，RSA2_PRIVATE 或者 RSA_PRIVATE 只需要填入一个 */
-    /** 如果商户两个都设置了，优先使用 RSA2_PRIVATE */
-    /** RSA2_PRIVATE 可以保证商户交易在更加安全的环境下进行，建议使用 RSA2_PRIVATE */
-    /** 获取 RSA2_PRIVATE，建议使用支付宝提供的公私钥生成工具生成， */
-    /**
-     * 工具地址：https://doc.open.alipay.com/docs/doc.htm?treeId=291&articleId=106097&docType=1
-     */
-    public static final String RSA2_PRIVATE = "";
-    public static final String RSA_PRIVATE = "";
-    private static final int SDK_PAY_FLAG = 1;
-    private static final int SDK_AUTH_FLAG = 2;
+    	private static final int SDK_PAY_FLAG = 1;
+    	private static final int SDK_AUTH_FLAG = 2;
+
+
 
 
     @Override
@@ -62,10 +49,10 @@ public class alipay extends CordovaPlugin {
             String orderInfo = args.getString(0);
             this.payment(orderInfo, callbackContext);
             return true;
-        } else if (action.equals("auth")) {
-            String authInfo = args.getString(0);
-            this.authV2(authInfo, callbackContext);
-            return true;
+        }else if(action.equals("auth")){
+        String authInfo = args.getString(0);
+        this.authV2(authInfo,callbackContext);
+        return true;
         }
         return false;
     }
@@ -102,37 +89,42 @@ public class alipay extends CordovaPlugin {
     }
 
 
-    private void authV2(String orderInfo, final CallbackContext callbackContext) {
+        private void authV2(String orderInfo, final CallbackContext callbackContext) {
 
-        final String payInfo = orderInfo;
-        cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                AuthTask alipay = new AuthTask(cordova.getActivity());
-                Map<String, String> result = alipay.authV2(payInfo, true);
-                Log.i("msp", result.toString());
+            final String payInfo = orderInfo;
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    AuthTask alipay = new AuthTask(cordova.getActivity());
+                    Map<String, String> result = alipay.authV2(payInfo, true);
+                    Log.i("msp", result.toString());
 
-                Message msg = new Message();
-                msg.what = SDK_AUTH_FLAG;
-                msg.obj = result;
-                mHandler.sendMessage(msg);
+                    Message msg = new Message();
+                    msg.what = SDK_AUTH_FLAG;
+                    msg.obj = result;
+                    mHandler.sendMessage(msg);
 
-                AuthResult payResult = new AuthResult(result, true);
-                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                String resultStatus = payResult.getResultStatus();
-                //callbackContext.success(new JSONObject(result));
-                // 判断resultStatus 为9000则代表支付成功
-                if (TextUtils.equals(resultStatus, "9000")) {
-                    // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                    callbackContext.success({'authCode':payResult.getAuthCode, 'userId':payResult.getUserId});
-                } else {
-                    // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                    callbackContext.error(new JSONObject(result));
+                    AuthResult payResult = new AuthResult(result,true);
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    Map<String, String> keyValues = new HashMap<String, String>();
+                    keyValues.put("authCode",payResult.getAuthCode());
+                    keyValues.put("userId",payResult.getUserId());
+
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+
+                        callbackContext.success(new JSONObject(keyValues));
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        callbackContext.error(new JSONObject(result));
+                    }
                 }
-            }
-        });
+            });
 
-    }
+        }
+
 
 
 
