@@ -39,6 +39,18 @@
     }];
 }
 
+- (void)auth:(CDVInvokedUrlCommand*)command
+{
+    callbackId = command.callbackId;
+    NSString* authString = [command.arguments objectAtIndex:0];
+    NSString* appScheme = [NSString stringWithFormat:@"ali%@", app_id];
+    [[AlipaySDK defaultService] auth_V2WithInfo: infoStr fromScheme:authString callback:^(NSDictionary *resultDic) {
+                                           NSLog("%@",resultDic)
+                                       }];
+    
+
+}
+
 - (void)handleOpenURL:(NSNotification *)notification {
     NSURL* url = [notification object];
     
@@ -58,5 +70,7 @@
         }];
     }
 }
+
+
 
 @end
