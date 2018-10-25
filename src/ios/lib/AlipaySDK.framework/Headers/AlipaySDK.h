@@ -171,7 +171,7 @@ typedef void(^CompletionBlock)(NSDictionary *resultDic);
  *  @param completionBlock  授权结果回调，若在授权过程中，调用方应用被系统终止，则此block无效，
                             需要调用方在appDelegate中调用processAuth_V2Result:standbyCallback:方法获取授权结果
  */
-- (void)auth_V2WithInfo:(NSString *)infoStr
+- (void)auth:(NSString *)infoStr
              fromScheme:(NSString *)schemeStr
                callback:(CompletionBlock)completionBlock;
 
