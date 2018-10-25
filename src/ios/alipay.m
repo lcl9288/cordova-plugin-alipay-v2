@@ -44,8 +44,8 @@
     callbackId = command.callbackId;
     NSString* authString = [command.arguments objectAtIndex:0];
     NSString* appScheme = [NSString stringWithFormat:@"ali%@", app_id];
-    [[AlipaySDK defaultService] auth_V2WithInfo: infoStr fromScheme:authString callback:^(NSDictionary *resultDic) {
-                                           NSLog("%@",resultDic)
+    [[AlipaySDK defaultService] auth_V2WithInfo: authString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+                                           NSLog("%@",resultDic);
                                        }];
     
 
