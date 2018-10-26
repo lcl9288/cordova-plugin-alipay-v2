@@ -35,7 +35,7 @@
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:resultDic];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         }
-        
+
     }];
 }
 
@@ -45,7 +45,7 @@
     NSString* authString = [command.arguments objectAtIndex:0];
     NSString* appScheme = [NSString stringWithFormat:@"ali%@", app_id];
     [[AlipaySDK defaultService] auth_V2WithInfo: authString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
-                                           NSLog("%@",resultDic);
+                                           NSLog(@"%@",resultDic);
                                        }];
     
 
