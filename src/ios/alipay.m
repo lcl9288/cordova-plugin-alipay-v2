@@ -56,16 +56,30 @@
 //            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
 //        }
                                        }];
-    
-
 }
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+
+[[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
+     NSLog(@"dddd%@",resultDic);
+    CDVPluginResult* pluginResult;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDic];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}];
+return YES;
+}
+
 
 - (void)handleOpenURL:(NSNotification *)notification {
     NSURL* url = [notification object];
     
     if ([url isKindOfClass:[NSURL class]] && [url.scheme isEqualToString:[NSString stringWithFormat:@"ali%@", app_id]])
     {
+         NSLog(@"ssss%@",url);
+        
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
+            
+              NSLog(@"asdd%@",resultDic);
             
             CDVPluginResult* pluginResult;
             
