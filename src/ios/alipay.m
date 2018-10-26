@@ -46,6 +46,15 @@
     NSString* appScheme = [NSString stringWithFormat:@"ali%@", app_id];
     [[AlipaySDK defaultService] auth_V2WithInfo: authString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
                                            NSLog(@"%@",resultDic);
+        CDVPluginResult* pluginResult;
+        
+//        if ([[resultDic objectForKey:@"resultStatus"]  isEqual: @"9000"]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDic];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+//        } else {
+//            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:resultDic];
+//            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+//        }
                                        }];
     
 
