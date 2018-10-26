@@ -43,7 +43,7 @@
 {
     callbackId = command.callbackId;
     NSString* authString = [command.arguments objectAtIndex:0];
-    NSString* appScheme = [NSString stringWithFormat:@"autoali%@", app_id];
+    NSString* appScheme = [NSString stringWithFormat:@"authali%@", app_id];
     [[AlipaySDK defaultService] auth_V2WithInfo: authString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
                                            NSLog(@"%@",resultDic);
         CDVPluginResult* pluginResult;
