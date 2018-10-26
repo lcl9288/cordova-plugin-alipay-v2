@@ -43,7 +43,7 @@
 {
     callbackId = command.callbackId;
     NSString* authString = [command.arguments objectAtIndex:0];
-    NSString* appScheme = [NSString stringWithFormat:@"ali%@", app_id];
+    NSString* appScheme = [NSString stringWithFormat:@"autoali%@", app_id];
     [[AlipaySDK defaultService] auth_V2WithInfo: authString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
                                            NSLog(@"%@",resultDic);
         CDVPluginResult* pluginResult;
@@ -58,16 +58,6 @@
                                        }];
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-
-[[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
-     NSLog(@"dddd%@",resultDic);
-    CDVPluginResult* pluginResult;
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDic];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-}];
-return YES;
-}
 
 
 - (void)handleOpenURL:(NSNotification *)notification {
@@ -75,11 +65,9 @@ return YES;
     
     if ([url isKindOfClass:[NSURL class]] && [url.scheme isEqualToString:[NSString stringWithFormat:@"ali%@", app_id]])
     {
-         NSLog(@"ssss%@",url);
         
         [[AlipaySDK defaultService] processOrderWithPaymentResult:url standbyCallback:^(NSDictionary *resultDic) {
             
-              NSLog(@"asdd%@",resultDic);
             
             CDVPluginResult* pluginResult;
             
@@ -92,6 +80,17 @@ return YES;
             }
         }];
     }
+    if ([url isKindOfClass:[NSURL class]] && [url.scheme isEqualToString:[NSString stringWithFormat:@"authali%@", app_id]])
+    {
+        [[AlipaySDK defaultService] processAuth_V2Result:url standbyCallback:^(NSDictionary *resultDic) {
+            NSLog(@"dddd%@",resultDic);
+            CDVPluginResult* pluginResult;
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:resultDic];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        }];
+        
+    }
+    
 }
 
 
