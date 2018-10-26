@@ -108,8 +108,8 @@ public class alipay extends CordovaPlugin {
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
                     Map<String, String> keyValues = new HashMap<String, String>();
-                    keyValues.put("authCode",payResult.getAuthCode());
-                    keyValues.put("userId",payResult.getUserId());
+                    keyValues.put("auth_code",payResult.getAuthCode());
+                    keyValues.put("user_id",payResult.getUserId());
 
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
